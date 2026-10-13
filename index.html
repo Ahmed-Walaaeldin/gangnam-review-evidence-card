@@ -42,12 +42,14 @@
     .choice-stars{color:#ba7338;font-size:13px;white-space:nowrap}
     .choice-sub{display:block;margin-top:3px;color:var(--muted);font-size:12px}
     .choice-hook{display:block;margin-top:8px;color:#475d56;font-size:12px}
-    .choice-reviewed{display:inline-block;margin-top:7px;font-size:10px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.04em}
+    .choice-reviewed{display:inline-block;margin-top:9px;padding:4px 8px;border-radius:999px;background:#e1f1e7;border:1px solid #b8ddc5;font-size:10px;font-weight:800;color:#245d41;text-transform:uppercase;letter-spacing:.04em}
     .sidebar-foot{border-top:1px solid var(--line);margin-top:20px;padding-top:16px}
     .sidebar-foot a{font-weight:700;text-decoration:none;font-size:13px}
     .card{overflow:hidden}
     .card-head{padding:28px 31px 25px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#fff 60%,#f0f7ef)}
     .card-kicker{color:var(--green);text-transform:uppercase;letter-spacing:.13em;font-size:11px;font-weight:800;margin-bottom:8px}
+    .card-annotation{display:inline-block;margin:0 0 12px;padding:5px 10px;border-radius:999px;background:#e1f1e7;border:1px solid #b8ddc5;color:#245d41;font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase}
+    .card-annotation.pending{background:#f3f1eb;border-color:#dedbd1;color:#685f50}
     .card-head h2{font-size:clamp(31px,3.3vw,43px);margin:0 0 9px}
     .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;color:var(--muted);font-size:13px}
     .meta span:not(:last-child)::after{content:"·";margin-left:8px;color:#a6b4ad}
@@ -125,7 +127,7 @@
     <div class="workspace">
       <aside class="panel list-panel" aria-label="Collected reviews">
         <h2>Explore the reviews</h2>
-        <p class="small">Select a review. Three have detailed evidence annotations.</p>
+        <p class="small">The three evidence-annotated reviews appear first. Select any review to inspect its summary.</p>
         <label for="review-search" class="small">Search clinic or summary</label>
         <input id="review-search" class="review-search" type="search" placeholder="Try rhinoplasty or View PS" autocomplete="off">
         <p id="review-count" class="review-count" aria-live="polite"></p>
@@ -133,7 +135,7 @@
         <div class="sidebar-foot"><p class="small">Public English summaries; original posts and patient identities not verified.</p><a href="https://gangnambeautyguide.com/en/reviews/" target="_blank" rel="noopener noreferrer">Open the source review listing ↗</a></div>
       </aside>
       <section class="panel card" aria-labelledby="review-title">
-        <div class="card-head"><p class="card-kicker">Evidence, not a verdict</p><h2 id="review-title"></h2><div id="review-meta" class="meta"></div><p id="takeaway" class="takeaway"></p></div>
+        <div class="card-head"><p class="card-kicker">Evidence, not a verdict</p><span id="card-annotation" class="card-annotation"></span><h2 id="review-title"></h2><div id="review-meta" class="meta"></div><p id="takeaway" class="takeaway"></p></div>
         <div class="toolbar"><span class="toolbar-label" id="coverage"></span><div class="toolbar-actions"><button type="button" id="toggle-gaps" class="pill-button" aria-pressed="false">Show gaps only</button><button type="button" id="print-card" class="pill-button">Print card</button></div></div>
         <div class="card-body"><div class="trace-box"><h3>Review context · public English summary</h3><p class="small">Collected from the public listing; the original Korean post was not checked.</p><div id="summary-sentences"></div><p id="trace-status" class="trace-status" aria-live="polite"></p></div><div class="section-title"><h3 id="fields-heading">What the translated summary supports</h3><span id="fields-hint">Select a field to trace its support</span></div><div id="evidence-grid" class="evidence-grid"></div><div class="source-box"><h3>Source and verification boundary</h3><p id="source-note"></p><a href="https://gangnambeautyguide.com/en/reviews/" target="_blank" rel="noopener noreferrer">See the original listing on Gangnam Beauty Guide ↗</a></div><div id="status-legend" class="legend" aria-label="Status legend"><span><i class="dot"></i>Reported in summary</span><span><i class="dot amber"></i>Qualified or still developing</span><span><i class="dot gray"></i>Not mentioned</span></div></div>
       </section>
@@ -261,7 +263,7 @@
       takeaway:'<strong>Annotation pending:</strong> this public English summary is available to read, but its procedure and claims have not been reviewed field by field.',
       summary:sentences(source.summary_en), sourceNote:sourceNote(source), searchText:`${source.clinic} ${source.summary_en} ${source.review_date}`.toLowerCase(),
       fields:[], reviewed:false
-    }).sort((a, b) => sourceRecords.get(a.sourceId).listing_position - sourceRecords.get(b.sourceId).listing_position);
+    }).sort((a, b) => Number(b.reviewed) - Number(a.reviewed) || sourceRecords.get(a.sourceId).listing_position - sourceRecords.get(b.sourceId).listing_position);
     const duplicateSamples = [
       ['1ef27ec0af2620ef', 'rhinoplasty'],
       ['0b8f796416279128', 'rhinoplasty'],
@@ -287,6 +289,9 @@
       document.querySelector('#review-count').textContent = `${matches.length} of ${allReviews.length} reviews · ${reviews.length} evidence annotated`;
     }
     function renderCard(){
+      const annotationBadge = document.querySelector('#card-annotation');
+      annotationBadge.textContent = selected.reviewed ? 'Evidence annotated' : 'Summary only · annotation pending';
+      annotationBadge.classList.toggle('pending', !selected.reviewed);
       document.querySelector('#review-title').textContent = selected.clinic;
       document.querySelector('#review-meta').innerHTML = `<span class="rating">★ ${escapeHtml(selected.rating)}</span><span>${escapeHtml(selected.procedure)}</span><span>${escapeHtml(selected.source)}</span><span>${escapeHtml(selected.date)}</span>`;
       document.querySelector('#takeaway').innerHTML = selected.takeaway;

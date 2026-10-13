@@ -4,7 +4,7 @@ A static product prototype for Gangnam Beauty Guide. It collects the site's publ
 
 ## What the published page does
 
-- Search all 90 collected summaries by clinic or text and open any review.
+- Search all 90 collected summaries by clinic or text and open any review. The three evidence-annotated cards appear first and carry a visible badge in the list and open card.
 - Inspect the full public English summary, rating, source, date, and snapshot position for each review.
 - On three reviewed cards, distinguish **reported**, **qualified**, and **not stated** fields, and click a field to highlight the relevant source sentence.
 - See two possible duplicate pairs from a small, deterministic five-record triage sample. These are candidates for human review, never verified merges.
