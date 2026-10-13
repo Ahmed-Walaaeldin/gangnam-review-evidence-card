@@ -1,7 +1,7 @@
-"""Embed three reviewed public records from the collector into the static prototype.
+"""Embed the collected review snapshot into the standalone static prototype.
 
-Run after collect_reviews.py. This keeps GitHub Pages and file:// preview working
-without publishing the full 90-review snapshot.
+Run after collect_reviews.py. Three source IDs have manually reviewed annotations;
+all other source records remain visible as unreviewed English summaries.
 """
 
 from __future__ import annotations
@@ -32,11 +32,10 @@ def main() -> None:
     missing = [record_id for record_id in SOURCE_IDS if record_id not in by_id]
     if missing:
         raise ValueError(f"Reviewed source records missing from snapshot: {', '.join(missing)}")
-    selected = [by_id[record_id] for record_id in SOURCE_IDS]
-    for record in selected:
+    for record in snapshot["records"]:
         if not record["summary_en"] or not record["clinic"] or not record["review_date"]:
             raise ValueError(f"Incomplete source record: {record['id']}")
-    source_data = json.dumps(selected, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    source_data = json.dumps(snapshot["records"], ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     replacement = f'{START}\n  <script id="source-records" type="application/json">{source_data}</script>\n  {END}'
     page = PAGE.read_text(encoding="utf-8")
     if page.count(START) != 1 or page.count(END) != 1:
@@ -54,7 +53,7 @@ def main() -> None:
     _, after = rest.split(DEDUPE_END, 1)
     updated = before + dedupe_block + after
     PAGE.write_text(updated, encoding="utf-8")
-    print(f"Embedded {len(selected)} collected source records in {PAGE.name}")
+    print(f"Embedded {len(snapshot['records'])} collected source records in {PAGE.name}")
 
 
 if __name__ == "__main__":

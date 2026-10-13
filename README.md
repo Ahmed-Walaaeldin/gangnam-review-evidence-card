@@ -1,43 +1,44 @@
 # Review Evidence Card
 
-A static, interactive product concept for Gangnam Beauty Guide. A collector saves the public English review listing; a build script embeds five selected records into the standalone page. Three have reviewed evidence-card annotations, and the duplicate matcher checks all five. The core distinction is **reported**, **qualified**, and **not mentioned**. It does not claim to verify patient identities, procedures, surgeons, or the underlying Korean posts.
+A static product prototype for Gangnam Beauty Guide. It collects the site's public English review summaries and turns the snapshot into a searchable 90-review browser. Three selected reviews have manually checked evidence annotations; the other 87 remain visible as **summary only** so the interface does not invent structured claims.
 
-## Why this feature
+## What the published page does
 
-A single rating can conceal uncertainty. One five-star review on the current reviews page describes a promising early result while the patient withholds a firm recommendation. Other summaries omit price, recovery, or the name of a surgeon. The card makes those limits visible before a buyer compares clinics.
+- Search all 90 collected summaries by clinic or text and open any review.
+- Inspect the full public English summary, rating, source, date, and snapshot position for each review.
+- On three reviewed cards, distinguish **reported**, **qualified**, and **not stated** fields, and click a field to highlight the relevant source sentence.
+- See two possible duplicate pairs from a small, deterministic five-record triage sample. These are candidates for human review, never verified merges.
 
-## Try it
+The page works without a backend or API key. The 90 records are embedded into `index.html` at build time, so GitHub Pages and a local file preview both work. It is a dated snapshot, not a live feed.
 
-Open `index.html` in any modern browser. Select among three reviews, click a field to highlight its source sentence (or see that no supporting detail is available), toggle “Show gaps only,” or print the selected card. Scroll down to see the duplicate review queue. The published page needs no backend, account, API key, or build step.
+## Data and judgment boundary
 
-## Source and scope
+Source: https://gangnambeautyguide.com/en/reviews/ . The collector found 90 public English summaries on 13 October 2026. These are summaries published by Gangnam Beauty Guide, not original Korean posts. Patient identity, procedure records, and surgeon identity were not independently verified.
 
-- Source: https://gangnambeautyguide.com/en/reviews/
-- Public English summaries visible on 13 October 2026: AB PS (5.0, 13 April), View PS (4.0, 13 April), and Hit PS (4.5, 12 April).
-- Clinic, rating, source, date, and the English summary in each card come from collected records. Card field values and interpretations were reviewed manually; they are not automatic extraction or independent verification.
-- The duplicate matcher uses five collected English summaries and manually assigned procedure labels. It requires matching clinic, date, and procedure plus distinctive-word overlap. Its output is a candidate queue, never a verified merge.
-- This is an independent prototype, not an official Gangnam Beauty Guide feature or medical recommendation.
+The collector supplies clinic, clinic URL, rating, source platform, date, English summary, and listing position. The three detailed cards' field values, statuses, procedure labels, and sentence links were reviewed manually. The remaining 87 summaries have no field-level annotation. Duplicate similarity is a screening signal, not proof that accounts share a patient or original post.
 
-## A production path
+## Rebuild from the public listing
 
-Keep the source URL, original Korean, translation, extraction version, and a citation span for every field. Let extraction abstain. Send claims about surgeon identity, procedure verification, and conflicting time points to human review before publication.
+1. Run `python collect_reviews.py` to fetch the current public English listing once into `data/reviews.json`.
+2. Run `python build_cards.py` to embed that snapshot and the duplicate logic into `index.html`.
+3. Run `node dedupe.test.js` to check the duplicate-candidate rules, then open `index.html` and inspect the cards.
 
-## Free publishing
+The build stops if one of the manually annotated source records changes or disappears, so a reviewed claim cannot silently attach to a different summary. Python's standard library is the only collector dependency.
 
-Upload the generated `index.html` and this README to the **root of a public** GitHub repository. In **Settings → Pages**, choose **Deploy from a branch**, `main`, and `/ (root)`. GitHub will give the project a public `github.io` URL. `index.html` embeds the five selected source records and duplicate logic, so it works as one file.
-
-Run `node dedupe.test.js` to check that similar same-clinic records enter the review queue while different clinics or procedures stay separate.
-
-## Collect real public reviews
-
-Run `python collect_reviews.py` to fetch the current English review listing once and save structured records to `data/reviews.json`. Each record includes the clinic and clinic URL, rating, source platform, review date, English summary, listing position, and a stable content fingerprint. The script uses Python's standard library and writes no output if the layout cannot be parsed.
-
-On this Windows workspace, Python is bundled with Codex but is not on `PATH`. From this folder in PowerShell, rerun it with:
+On this Windows workspace, Python is bundled with Codex but is not on `PATH`. From this folder in PowerShell, replace `collect_reviews.py` with `build_cards.py` for the second step:
 
 ```powershell
 & "$env:USERPROFILE\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" .\collect_reviews.py
 ```
 
-The collector was checked against the live page on 13 October 2026 and found 90 summaries. It collects the public English summaries shown by Gangnam Beauty Guide; it does not retrieve original Korean posts, patient identities, individual review permalinks, or independent verification. The `data/` folder is ignored by Git so the full text snapshot is kept local rather than republished with the prototype.
+## Publish on GitHub Pages
 
-After collecting, run `python build_cards.py` (or use the bundled Python command above with `build_cards.py`) to refresh the three published cards and the duplicate queue from the local snapshot. The build fails if any manually reviewed source record has disappeared or changed, so its annotations are not silently attached to different text. Five selected summaries are embedded in the page; the full 90-record snapshot remains local.
+Put the generated `index.html` in the repository root. The page is self-contained; GitHub Pages does not run the Python scripts. To show the engineering work, also publish `collect_reviews.py`, `build_cards.py`, `dedupe.js`, `dedupe.test.js`, and this README. In **Settings → Pages**, use **Deploy from a branch → main → /(root)**.
+
+This repository may also include `data/reviews.json` as a public snapshot. That file is not loaded by the published page, because its contents are already embedded in `index.html`. The `.gitignore` in the local project prevents future accidental tracking but does not remove a file already committed to GitHub.
+
+## Production path
+
+Keep an original-post identifier and URL, Korean text, translation, extraction version, and exact source span for every field. Let extraction abstain, and review any claim about surgeon identity, procedure verification, conflicting timelines, or duplicate identity before publication.
+
+This is an independent prototype, not an official Gangnam Beauty Guide feature or medical recommendation.
