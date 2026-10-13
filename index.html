@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A review evidence card prototype for Gangnam Beauty Guide. See what a translated patient review says, qualifies, and leaves unstated.">
+  <title>Review Evidence Card · Gangnam Beauty Guide concept</title>
+  <style>
+    :root{color-scheme:light;--ink:#18272a;--muted:#65716f;--line:#dce4dc;--paper:#fbfaf5;--surface:#fff;--green:#126451;--green-soft:#e8f4ed;--amber:#925820;--amber-soft:#fff0db;--slate:#52616a;--slate-soft:#eef1f1;--rose:#8f4f48;--rose-soft:#f9eeea;--shadow:0 18px 55px rgba(30,55,47,.08)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+    button,a{font:inherit}
+    button:focus-visible,a:focus-visible{outline:3px solid #1a947b;outline-offset:3px}
+    a{color:var(--green)}
+    .topbar{background:#173f38;color:#f9fbf7}
+    .topbar-inner{max-width:1240px;margin:auto;padding:13px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none;font-weight:750;letter-spacing:.01em}
+    .brand-mark{display:grid;place-items:center;width:33px;height:33px;border:1px solid #a6cab7;border-radius:10px;color:#d8f2df;font-family:Georgia,serif;font-size:23px}
+    .topbar-note{color:#c6ded0;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+    main{max-width:1240px;margin:auto;padding:46px 28px 70px}
+    .eyebrow{margin:0 0 13px;color:var(--green);font-weight:760;font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+    h1,h2,h3,p{margin-top:0}
+    h1,h2{font-family:Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.035em}
+    h1{font-size:clamp(42px,5vw,66px);line-height:1.04;max-width:850px;margin-bottom:18px}
+    .intro{max-width:740px;font-size:17px;color:#485a56;margin-bottom:26px}
+    .principle{display:flex;align-items:flex-start;gap:12px;max-width:850px;background:#edf5ed;border:1px solid #cce3d2;border-radius:13px;padding:16px 18px;color:#285344;font-size:14px;margin-bottom:33px}
+    .principle strong{white-space:nowrap}
+    .principle-icon{font-size:19px;line-height:1}
+    .workspace{display:grid;grid-template-columns:minmax(260px,320px) minmax(0,1fr);gap:22px;align-items:start}
+    .panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+    .list-panel{padding:20px;position:sticky;top:20px}
+    .list-panel h2{font-size:25px;margin:0 0 3px}
+    .small{color:var(--muted);font-size:13px}
+    .review-list{display:grid;gap:9px;margin-top:19px}
+    .review-choice{width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:13px 14px;text-align:left;cursor:pointer;transition:border-color .15s,background .15s,transform .15s}
+    .review-choice:hover{border-color:#8cb5a3;transform:translateY(-1px)}
+    .review-choice[aria-pressed="true"]{background:#f0f7f0;border-color:#479174;box-shadow:inset 3px 0 0 var(--green)}
+    .choice-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-weight:750}
+    .choice-stars{color:#ba7338;font-size:13px;white-space:nowrap}
+    .choice-sub{display:block;margin-top:3px;color:var(--muted);font-size:12px}
+    .choice-hook{display:block;margin-top:8px;color:#475d56;font-size:12px}
+    .sidebar-foot{border-top:1px solid var(--line);margin-top:20px;padding-top:16px}
+    .sidebar-foot a{font-weight:700;text-decoration:none;font-size:13px}
+    .card{overflow:hidden}
+    .card-head{padding:28px 31px 25px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#fff 60%,#f0f7ef)}
+    .card-kicker{color:var(--green);text-transform:uppercase;letter-spacing:.13em;font-size:11px;font-weight:800;margin-bottom:8px}
+    .card-head h2{font-size:clamp(31px,3.3vw,43px);margin:0 0 9px}
+    .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;color:var(--muted);font-size:13px}
+    .meta span:not(:last-child)::after{content:"·";margin-left:8px;color:#a6b4ad}
+    .rating{font-weight:700;color:#ae6834}
+    .takeaway{margin:19px 0 0;font-size:16px;line-height:1.55;max-width:720px}
+    .takeaway strong{color:var(--green)}
+    .toolbar{padding:14px 31px;display:flex;justify-content:space-between;align-items:center;gap:14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+    .toolbar-label{font-size:13px;color:var(--muted)}
+    .toolbar-actions{display:flex;gap:8px}
+    .pill-button{border:1px solid #cbd9cf;background:#fff;border-radius:999px;padding:7px 13px;color:#315a4a;font-size:12px;font-weight:700;cursor:pointer}
+    .pill-button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+    .card-body{padding:25px 31px 30px}
+    .trace-box{background:#f8faf6;border:1px solid var(--line);border-radius:13px;padding:17px 19px;margin-bottom:25px}
+    .trace-box h3{font-size:14px;margin-bottom:4px}
+    .trace-box .small{margin-bottom:12px}
+    .summary-sentence{display:inline;line-height:1.85;font-size:13px;color:#40544c;border-radius:4px;padding:2px 3px;transition:background .15s}
+    .summary-sentence.active{background:#d9eadd;box-shadow:0 0 0 2px #d9eadd;color:#173f38}
+    .trace-status{margin:12px 0 0;font-size:12px;color:var(--green);font-weight:700}
+    .section-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .section-title h3{font-size:15px;letter-spacing:.01em;margin:0}
+    .section-title span{font-size:12px;color:var(--muted)}
+    .evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .evidence-item{display:block;width:100%;border:1px solid var(--line);border-radius:13px;padding:16px 17px;min-height:132px;background:#fff;text-align:left;cursor:pointer;transition:box-shadow .15s,transform .15s}
+    .evidence-item:hover{box-shadow:0 8px 22px rgba(30,55,47,.09);transform:translateY(-1px)}
+    .evidence-item[aria-pressed="true"]{box-shadow:0 0 0 2px #75a68a}
+    .evidence-item[data-status="reported"]{border-top:3px solid var(--green)}
+    .evidence-item[data-status="qualified"]{border-top:3px solid #ce914f}
+    .evidence-item[data-status="missing"]{border-top:3px solid #9bacab}
+    .field-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px}
+    .field-name{font-size:13px;font-weight:800}
+    .status{font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:800;border-radius:999px;padding:4px 7px;white-space:nowrap}
+    .status.reported{color:var(--green);background:var(--green-soft)}
+    .status.qualified{color:var(--amber);background:var(--amber-soft)}
+    .status.missing{color:var(--slate);background:var(--slate-soft)}
+    .field-value{display:block;font-size:14px;font-weight:660;margin:0 0 5px}
+    .field-evidence{display:block;font-size:12px;color:var(--muted);margin:0}
+    .source-box{margin-top:22px;border-radius:13px;background:#f6f8f4;border:1px solid #dbe6da;padding:19px 20px}
+    .source-box h3{font-size:14px;margin-bottom:9px}
+    .source-box p{font-size:13px;color:#4f615b;margin-bottom:10px}
+    .source-box a{font-size:13px;font-weight:740}
+    .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;color:#6a7772;font-size:11px}
+    .legend span{display:inline-flex;align-items:center;gap:6px}
+    .dot{height:8px;width:8px;border-radius:50%;background:var(--green)}
+    .dot.amber{background:#ce914f}.dot.gray{background:#9bacab}
+    .triage{margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px 30px}
+    .triage h2{font-size:27px;margin-bottom:7px}
+    .triage-intro{font-size:14px;color:var(--muted);max-width:760px}
+    .triage-report{display:grid;gap:12px;margin-top:19px}
+    .triage-pair{border:1px solid var(--line);border-radius:13px;padding:18px;background:#fcfdfb}
+    .triage-pair h3{font-size:15px;margin:0 0 5px}
+    .triage-pair p{font-size:12px;color:var(--muted);margin:0 0 9px}
+    .triage-pair strong{color:var(--green)}
+    .triage-explain{font-size:13px;margin-top:14px;color:#40544c}
+    .method{margin-top:26px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px 30px}
+    .method h2{font-size:27px;margin-bottom:7px}
+    .method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:17px}
+    .method-grid h3{font-size:13px;margin-bottom:5px}
+    .method-grid p{font-size:13px;color:var(--muted);margin:0}
+    .footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:25px}
+    .hidden{display:none!important}
+    @media(max-width:840px){main{padding-top:32px}.workspace{grid-template-columns:1fr}.list-panel{position:static}.review-list{grid-template-columns:repeat(3,1fr)}.choice-head{display:block}.choice-stars{display:block;margin-top:3px}.method-grid{grid-template-columns:1fr;gap:12px}}
+    @media(max-width:650px){.topbar-inner{padding:13px 18px}.topbar-note{display:none}main{padding:30px 16px 45px}h1{font-size:41px}.intro{font-size:15px}.principle{display:block}.principle strong{white-space:normal}.principle-icon{display:none}.review-list{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:5px}.review-choice{flex:0 0 230px;scroll-snap-align:start}.card-head,.card-body{padding:22px 18px}.toolbar{padding:13px 18px}.evidence-grid{grid-template-columns:1fr}.triage,.method{padding:23px 18px}}
+    @media print{body{background:#fff}.topbar,.list-panel,.toolbar,.method,.footer{display:none!important}main{padding:0;max-width:none}.workspace{display:block}.card{box-shadow:none;border:0}.card-head,.card-body{padding:16px}.evidence-grid{grid-template-columns:repeat(2,1fr)}.source-box{break-inside:avoid}}
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="topbar-inner"><a class="brand" href="https://gangnambeautyguide.com" target="_blank" rel="noopener noreferrer" aria-label="Gangnam Beauty Guide website"><span class="brand-mark" aria-hidden="true">G</span><span>Gangnam Beauty Guide <span style="font-weight:400;color:#c7dbcf">/ concept</span></span></a><span class="topbar-note">Independent product prototype</span></div></header>
+  <main>
+    <p class="eyebrow">Review evidence card · interactive prototype</p>
+    <h1>What does this review <em>actually</em> tell us?</h1>
+    <p class="intro">A star rating is a useful signal, but it cannot fill in missing facts. This card separates what a translated patient summary reports, what it qualifies, and what it never says.</p>
+    <div class="principle"><span class="principle-icon" aria-hidden="true">◎</span><div><strong>Design rule:</strong> “Not mentioned” is an answer. It must not be converted into “no issue,” “verified,” or a confident recommendation.</div></div>
+
+    <div class="workspace">
+      <aside class="panel list-panel" aria-label="Sample reviews">
+        <h2>Explore three reviews</h2>
+        <p class="small">Select a case to inspect its evidence.</p>
+        <div id="review-list" class="review-list"></div>
+        <div class="sidebar-foot"><p class="small">Manually structured from public English summaries. The demo does not access patient identities or clinic records.</p><a href="https://gangnambeautyguide.com/en/reviews/" target="_blank" rel="noopener noreferrer">Open the source review listing ↗</a></div>
+      </aside>
+      <section class="panel card" aria-labelledby="review-title">
+        <div class="card-head"><p class="card-kicker">Evidence, not a verdict</p><h2 id="review-title"></h2><div id="review-meta" class="meta"></div><p id="takeaway" class="takeaway"></p></div>
+        <div class="toolbar"><span class="toolbar-label" id="coverage"></span><div class="toolbar-actions"><button type="button" id="toggle-gaps" class="pill-button" aria-pressed="false">Show gaps only</button><button type="button" id="print-card" class="pill-button">Print card</button></div></div>
+        <div class="card-body"><div class="trace-box"><h3>Review context · public English summary</h3><p class="small">Collected from the public listing; the original Korean post was not checked.</p><div id="summary-sentences"></div><p id="trace-status" class="trace-status" aria-live="polite"></p></div><div class="section-title"><h3>What the translated summary supports</h3><span>Select a field to trace its support</span></div><div id="evidence-grid" class="evidence-grid"></div><div class="source-box"><h3>Source and verification boundary</h3><p id="source-note"></p><a href="https://gangnambeautyguide.com/en/reviews/" target="_blank" rel="noopener noreferrer">See the original listing on Gangnam Beauty Guide ↗</a></div><div class="legend" aria-label="Status legend"><span><i class="dot"></i>Reported in summary</span><span><i class="dot amber"></i>Qualified or still developing</span><span><i class="dot gray"></i>Not mentioned</span></div></div>
+      </section>
+    </div>
+    <section class="triage" aria-labelledby="triage-title"><p class="eyebrow">Working duplicate triage</p><h2 id="triage-title">Similar reviews need a second look.</h2><p class="triage-intro">A small deterministic matcher compares clinic, date, procedure, and distinctive words in five collected English summaries. Procedure labels here are reviewed annotations. The result is a review queue; it does not merge records or claim that two accounts belong to one patient.</p><div id="triage-report" class="triage-report"></div><p class="triage-explain">Why this matters: repeated syndicated accounts can inflate review counts. Clinic, date, and wording are useful screening signals, but a human needs original-post identifiers or stronger provenance before merging records. <a href="https://gangnambeautyguide.com/en/reviews/" target="_blank" rel="noopener noreferrer">Inspect the public listing ↗</a></p></section>
+    <section class="method" aria-labelledby="method-title"><p class="eyebrow">How this would scale</p><h2 id="method-title">A narrow layer between translation and trust.</h2><div class="method-grid"><div><h3>1. Extract with citations</h3><p>Map each field to a source passage, retain the original language and page URL, and allow the model to abstain.</p></div><div><h3>2. Check the risky claims</h3><p>Human review for surgeon identity, procedure verification, conflicting time points, and anything that changes a buyer’s interpretation.</p></div><div><h3>3. Display limits openly</h3><p>Show “not mentioned” and “not independently verified.” Evidence coverage is not a clinic score or a medical recommendation.</p></div></div></section>
+    <div class="footer"><span>Prototype by Ahmed Walaaeldin · 2026</span><span>Manual evidence cards and deterministic duplicate-candidate triage; no clinical or identity verification.</span></div>
+  </main>
+  <!-- SOURCE_RECORDS_START -->
+  <script id="source-records" type="application/json">[{"id":"1ef27ec0af2620ef","listing_position":8,"clinic":"AB PS","clinic_url":"https://gangnambeautyguide.com/en/clinics/ab-ps","rating":5.0,"source_platform":"GangnamUnni","review_date":"2026-04-13","summary_en":"The reviewer had a third rhinoplasty after two prior nose surgeries left the shape unsatisfactory and caused the tip to droop repeatedly. They said the consultation felt most trustworthy because the surgeon clearly explained why the earlier operations failed and the limits of a third revision; early recovery looked good, with the tip line and nostril angle already pleasing and no sign of the tip dropping again. They remained cautiously hopeful and did not give a firm recommendation yet, saying they would keep watching the result.","listing_url":"https://gangnambeautyguide.com/en/reviews/","verification":"public English summary only; original post and patient not verified"},{"id":"f19d4051b235d7e0","listing_position":2,"clinic":"View PS","clinic_url":"https://gangnambeautyguide.com/en/clinics/view-ps","rating":4.0,"source_platform":"GangnamUnni","review_date":"2026-04-13","summary_en":"The reviewer had eyelid surgery to correct a sleepy-looking appearance and said forcing the eyes open had been difficult before treatment. Recovery details and cost were not mentioned, but they reported that the result suited their face, made makeup easier, reduced heaviness in the eyelids, and improved their overall expression. They felt very satisfied and would recommend it.","listing_url":"https://gangnambeautyguide.com/en/reviews/","verification":"public English summary only; original post and patient not verified"},{"id":"f453abf9b7827891","listing_position":55,"clinic":"Hit PS","clinic_url":"https://gangnambeautyguide.com/en/clinics/hit-ps","rating":4.5,"source_platform":"GangnamUnni","review_date":"2026-04-12","summary_en":"The reviewer had an endoscopic forehead lift and was two months out from surgery. They said the result looked natural and they were satisfied overall, with forehead sensation and movement partly returning by that point, but they had some hair loss along the incision line and noted long waits for follow-up checks. They felt the procedure was worthwhile and would recommend it, though they warned that people expecting dramatic change might be disappointed.","listing_url":"https://gangnambeautyguide.com/en/reviews/","verification":"public English summary only; original post and patient not verified"},{"id":"0b8f796416279128","listing_position":13,"clinic":"AB PS","clinic_url":"https://gangnambeautyguide.com/en/clinics/ab-ps","rating":5.0,"source_platform":"GangnamUnni","review_date":"2026-04-13","summary_en":"The reviewer had a third rhinoplasty after two prior nose surgeries left them unhappy with the shape and a drooping tip. They said the consultation felt most trustworthy because the surgeon clearly explained why the previous results failed and the limits of a third operation; early results looked good with a pleasing tip line and nasolabial angle, and they hoped it would stay stable.","listing_url":"https://gangnambeautyguide.com/en/reviews/","verification":"public English summary only; original post and patient not verified"},{"id":"9eda34702c2e0145","listing_position":63,"clinic":"Hit PS","clinic_url":"https://gangnambeautyguide.com/en/clinics/hit-ps","rating":4.5,"source_platform":"GangnamUnni","review_date":"2026-04-12","summary_en":"The reviewer had an endoscopic forehead lift and was two months out, reporting that the result looked natural and that forehead sensation had mostly returned by then. They had some hair loss along the incision line and noted long waiting times for follow-up checks, but overall they were satisfied and would recommend it, while warning that people expecting dramatic change might be disappointed.","listing_url":"https://gangnambeautyguide.com/en/reviews/","verification":"public English summary only; original post and patient not verified"}]</script>
+  <!-- SOURCE_RECORDS_END -->
+  <!-- DEDUPE_START -->
+  <script>
+/* Candidate triage only. Similar wording is not proof of a shared patient or source post. */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.reviewDedupe = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  const stop = new Set('a about after again all also an and are as at be because been but by for from had has have in into is it its later of on or overall patient reported result reviewer said same she that the their they this to was were while with would'.split(' '));
+  const canonical = value => String(value).toLowerCase().normalize('NFKD').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+  function tokens(value) {
+    return new Set(canonical(value).split(' ').filter(word => word.length > 2 && !stop.has(word)));
+  }
+  function similarity(left, right) {
+    const a = tokens(left), b = tokens(right);
+    if (!a.size || !b.size) return { score: 0, shared: [] };
+    const shared = [...a].filter(word => b.has(word)).sort();
+    return { score: shared.length / new Set([...a, ...b]).size, shared };
+  }
+  function compare(a, b) {
+    const sameClinic = canonical(a.clinic) === canonical(b.clinic);
+    const sameDate = a.date === b.date;
+    const sameProcedure = canonical(a.procedure) === canonical(b.procedure);
+    const match = similarity(a.summary, b.summary);
+    const candidate = sameClinic && sameDate && sameProcedure && match.score >= 0.24;
+    return { candidate, sameClinic, sameDate, sameProcedure, score: match.score, shared: match.shared };
+  }
+  function triage(reviews) {
+    const pairs = [];
+    for (let i = 0; i < reviews.length; i++) {
+      for (let j = i + 1; j < reviews.length; j++) {
+        const result = compare(reviews[i], reviews[j]);
+        if (result.candidate) pairs.push({ left: reviews[i], right: reviews[j], ...result });
+      }
+    }
+    return pairs.sort((a, b) => b.score - a.score);
+  }
+  return { compare, triage, similarity };
+});
+
+  </script>
+  <!-- DEDUPE_END -->
+  <script>
+    const reviews = [
+      {
+        id: 'ab', sourceId: '1ef27ec0af2620ef', procedure: 'Third rhinoplasty', hook: 'Five stars, but the outcome is still early.',
+        takeaway: '<strong>Important nuance:</strong> the patient liked the early result but withheld a firm recommendation while watching whether it lasts.',
+        fields: [
+          { name:'Procedure', status:'reported', value:'Third rhinoplasty', evidence:'The summary says this was a third nose operation after two unsatisfactory results.', sourceIndex:0 },
+          { name:'Reason for choosing clinic', status:'reported', value:'Consultation discussed prior failures', evidence:'The patient valued an explanation of earlier problems and the limits of another revision.', sourceIndex:1 },
+          { name:'Outcome durability', status:'qualified', value:'Promising early result; long-term result unknown', evidence:'The patient liked the tip and nostril angle but was still waiting to see whether the result holds.', sourceIndex:1 },
+          { name:'Recommendation', status:'qualified', value:'Not firm yet', evidence:'The summary says the patient did not make a final recommendation at this stage.', sourceIndex:2 },
+          { name:'Recovery period', status:'missing', value:'Not mentioned', evidence:'No recovery duration or later follow-up interval is given in this summary.' },
+          { name:'Price paid', status:'missing', value:'Not mentioned', evidence:'No amount or itemized cost appears in this summary.' },
+          { name:'Named surgeon', status:'missing', value:'Not mentioned', evidence:'A surgeon is discussed, but no individual is named in the summary.' },
+          { name:'Verified procedure', status:'missing', value:'Not established here', evidence:'The public summary alone does not include independent procedure verification.' }
+        ]
+      },
+      {
+        id: 'view', sourceId: 'f19d4051b235d7e0', procedure: 'Eyelid surgery', hook: 'A positive result with key comparison details absent.',
+        takeaway: '<strong>Useful, with limits:</strong> the patient reports an appearance change, while cost and recovery are absent from the summary.',
+        fields: [
+          { name:'Procedure', status:'reported', value:'Eyelid surgery', evidence:'The summary connects the review to surgery for a sleepy-looking eye appearance.', sourceIndex:0 },
+          { name:'Patient-reported change', status:'reported', value:'Easier makeup; less eyelid heaviness', evidence:'The patient describes an easier makeup routine and a lighter-looking eye area.', sourceIndex:1 },
+          { name:'Overall sentiment', status:'reported', value:'Satisfied', evidence:'The summary describes satisfaction with how the result suited the patient’s face.', sourceIndex:2 },
+          { name:'Recovery period', status:'missing', value:'Not mentioned', evidence:'The summary explicitly gives no recovery detail.' },
+          { name:'Price paid', status:'missing', value:'Not mentioned', evidence:'The summary explicitly gives no cost detail.' },
+          { name:'Named surgeon', status:'missing', value:'Not mentioned', evidence:'No individual surgeon is named in the summary.' },
+          { name:'Follow-up time', status:'missing', value:'Not mentioned', evidence:'No post-procedure time point is specified in this summary.' },
+          { name:'Verified procedure', status:'missing', value:'Not established here', evidence:'The public summary alone does not include independent procedure verification.' }
+        ]
+      },
+      {
+        id: 'hit', sourceId: 'f453abf9b7827891', procedure: 'Forehead lift', hook: 'A favorable rating alongside ongoing drawbacks.',
+        takeaway: '<strong>Balanced reading:</strong> the patient liked the appearance change, but also reported an unresolved incision-area concern and a delayed follow-up appointment.',
+        fields: [
+          { name:'Procedure', status:'reported', value:'Endoscopic forehead lift', evidence:'The summary identifies a forehead lift as the procedure discussed.', sourceIndex:0 },
+          { name:'Follow-up time', status:'reported', value:'About two months', evidence:'The summary places the patient’s report around two months after surgery.', sourceIndex:0 },
+          { name:'Positive outcome', status:'reported', value:'Patient liked the natural-looking result', evidence:'The summary says the result looked natural and the patient was satisfied overall.', sourceIndex:1 },
+          { name:'Ongoing concern', status:'qualified', value:'Hair loss near incision was still reported', evidence:'The concern had not resolved at the time of the account.', sourceIndex:1 },
+          { name:'Aftercare access', status:'qualified', value:'Follow-up delay reported', evidence:'The patient describes waiting for a follow-up appointment.', sourceIndex:1 },
+          { name:'Price paid', status:'missing', value:'Not mentioned', evidence:'No amount or cost breakdown appears in this summary.' },
+          { name:'Named surgeon', status:'missing', value:'Not mentioned', evidence:'No individual surgeon is named in the summary.' },
+          { name:'Verified procedure', status:'missing', value:'Not established here', evidence:'The public summary alone does not include independent procedure verification.' }
+        ]
+      }
+    ];
+
+    const list = document.querySelector('#review-list');
+    const grid = document.querySelector('#evidence-grid');
+    const gapButton = document.querySelector('#toggle-gaps');
+    const sourceRecords = new Map(JSON.parse(document.querySelector('#source-records').textContent).map(record => [record.id, record]));
+    for (const review of reviews) {
+      const source = sourceRecords.get(review.sourceId);
+      if (!source) throw new Error(`Collected source record missing: ${review.sourceId}`);
+      review.clinic = source.clinic;
+      review.rating = source.rating.toFixed(1);
+      review.date = new Date(`${source.review_date}T00:00:00Z`).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+      review.source = `${source.source_platform} via GBG`;
+      review.summary = source.summary_en.match(/[^.!?]+[.!?]+|[^.!?]+$/g)?.map(part => part.trim()).filter(Boolean) || [source.summary_en];
+      review.sourceNote = `Collected public English summary from ${source.source_platform}, listed under ${source.clinic} on ${source.review_date} (snapshot position ${source.listing_position}). Source record ${source.id}. The underlying Korean post, patient identity, procedure record, and surgeon identity were not independently checked.`;
+      if (review.fields.some(field => Number.isInteger(field.sourceIndex) && field.sourceIndex >= review.summary.length)) throw new Error(`Source trace index out of range: ${review.id}`);
+    }
+    const duplicateSamples = [
+      ['1ef27ec0af2620ef', 'rhinoplasty'],
+      ['0b8f796416279128', 'rhinoplasty'],
+      ['f453abf9b7827891', 'forehead lift'],
+      ['9eda34702c2e0145', 'forehead lift'],
+      ['f19d4051b235d7e0', 'eyelid surgery']
+    ].map(([id, procedure]) => {
+      const record = sourceRecords.get(id);
+      if (!record) throw new Error(`Collected duplicate-triage record missing: ${id}`);
+      return { id, position:record.listing_position, clinic:record.clinic, date:record.review_date, procedure, summary:record.summary_en };
+    });
+    let selected = reviews[0];
+    let selectedField = null;
+    let gapsOnly = false;
+    const escapeHtml = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+    function renderList(){
+      list.innerHTML = reviews.map(r => `<button type="button" class="review-choice" data-id="${r.id}" aria-pressed="${r.id === selected.id}"><span class="choice-head"><span>${escapeHtml(r.clinic)}</span><span class="choice-stars">★ ${escapeHtml(r.rating)}</span></span><span class="choice-sub">${escapeHtml(r.procedure)} · ${escapeHtml(r.date)}</span><span class="choice-hook">${escapeHtml(r.hook)}</span></button>`).join('');
+    }
+    function renderCard(){
+      document.querySelector('#review-title').textContent = selected.clinic;
+      document.querySelector('#review-meta').innerHTML = `<span class="rating">★ ${escapeHtml(selected.rating)}</span><span>${escapeHtml(selected.procedure)}</span><span>${escapeHtml(selected.source)}</span><span>${escapeHtml(selected.date)}</span>`;
+      document.querySelector('#takeaway').innerHTML = selected.takeaway;
+      const reported = selected.fields.filter(f => f.status === 'reported').length;
+      const qualified = selected.fields.filter(f => f.status === 'qualified').length;
+      const missing = selected.fields.filter(f => f.status === 'missing').length;
+      document.querySelector('#coverage').textContent = `${reported} reported · ${qualified} qualified · ${missing} not established`;
+      const active = selectedField === null ? null : selected.fields[selectedField];
+      document.querySelector('#summary-sentences').innerHTML = selected.summary.map((sentence, index) => `<span class="summary-sentence${active?.sourceIndex === index ? ' active' : ''}">${escapeHtml(sentence)} </span>`).join('');
+      document.querySelector('#trace-status').textContent = active ? (Number.isInteger(active.sourceIndex) ? `Highlighted source sentence supports “${active.name}”; field wording is a reviewed interpretation.` : `“${active.name}” is not established by this public English summary.`) : 'Select a field below to inspect its support.';
+      const fields = selected.fields.map((field, index) => ({field, index})).filter(({field}) => !gapsOnly || field.status !== 'reported');
+      grid.innerHTML = fields.map(({field:f, index}) => `<button type="button" class="evidence-item" data-field-index="${index}" data-status="${f.status}" aria-pressed="${selectedField === index}"><span class="field-top"><span class="field-name">${escapeHtml(f.name)}</span><span class="status ${f.status}">${f.status === 'missing' ? 'Not stated' : f.status === 'qualified' ? 'Qualified' : 'Reported'}</span></span><span class="field-value">${escapeHtml(f.value)}</span><span class="field-evidence">${escapeHtml(f.evidence)}</span></button>`).join('');
+      document.querySelector('#source-note').textContent = selected.sourceNote;
+      gapButton.setAttribute('aria-pressed', String(gapsOnly));
+      gapButton.textContent = gapsOnly ? 'Show all fields' : 'Show gaps only';
+    }
+    list.addEventListener('click', event => { const button = event.target.closest('button[data-id]'); if(!button) return; selected = reviews.find(r => r.id === button.dataset.id) || reviews[0]; selectedField = null; renderList(); renderCard(); });
+    grid.addEventListener('click', event => { const button = event.target.closest('button[data-field-index]'); if(!button) return; selectedField = Number(button.dataset.fieldIndex); renderCard(); });
+    gapButton.addEventListener('click', () => { gapsOnly = !gapsOnly; renderCard(); });
+    document.querySelector('#print-card').addEventListener('click', () => window.print());
+    const duplicatePairs = reviewDedupe.triage(duplicateSamples);
+    document.querySelector('#triage-report').innerHTML = duplicatePairs.map(pair => `<div class="triage-pair"><h3>${escapeHtml(pair.left.clinic)} · ${escapeHtml(pair.left.procedure)} <strong>possible duplicate</strong></h3><p>Listing positions #${pair.left.position} ↔ #${pair.right.position} · same clinic, date, and procedure · ${Math.round(pair.score * 100)}% distinctive-word overlap</p><p>Shared signals: ${escapeHtml(pair.shared.slice(0, 9).join(', '))}</p><p>Action: inspect source identifiers and original posts before any merge.</p></div>`).join('') || '<p>No candidate pairs in this sample.</p>';
+    renderList(); renderCard();
+  </script>
+</body>
+</html>
